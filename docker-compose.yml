@@ -5,7 +5,7 @@ volumes:
     caddy-data:
     caddy-config:
 networks:
-    idea2app:
+    open-source-bazaar:
 
 services:
     postgres:
@@ -15,18 +15,18 @@ services:
         volumes:
             - database-data:/var/lib/postgresql/data/
         networks:
-            - idea2app
+            - open-source-bazaar
         restart: always
-    rest-node-ts:
+    citypet-service:
         depends_on:
             - postgres
-        image: idea2app/rest-node-ts
+        image: open-source-bazaar/citypet-service
         environment:
             - NODE_ENV=production
             - DATABASE_URL=postgres://postgres:${APP_SECRET}@postgres:5432/postgres
             - PORT=8080
         networks:
-            - idea2app
+            - open-source-bazaar
         healthcheck:
             test: ['CMD-SHELL', 'curl -f http://localhost:8080/ || exit 1']
             interval: 3s
@@ -38,14 +38,14 @@ services:
     dashpress:
         depends_on:
             - postgres
-            - rest-node-ts
+            - citypet-service
         image: luojiyin/dashpress:1.0
         volumes:
             - ./dashpress/app:/app
         ports:
             - 8081:3000
         networks:
-            - idea2app
+            - open-source-bazaar
         healthcheck:
             test: ['CMD-SHELL', 'curl -f http://localhost:3000/ || exit 1']
             interval: 3s
@@ -59,17 +59,17 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
-            - idea2app
+            - open-source-bazaar
         restart: always
     caddy:
         depends_on:
-            - rest-node-ts
+            - citypet-service
         image: caddy
         ports:
             - 80:80
             - 443:443
         networks:
-            - idea2app
+            - open-source-bazaar
         restart: always
         volumes:
             - caddy-data:/data
