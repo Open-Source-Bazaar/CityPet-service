@@ -1,6 +1,6 @@
 {
     "name": "@open-source-bazaar/citypet-service",
-    "version": "1.3.0",
+    "version": "0.5.0",
     "types": "index.d.ts",
     "dependencies": {
         "@types/jsonwebtoken": "^9.0.10",
